@@ -15,11 +15,16 @@
 
   <properties>
   </properties>
-  
+
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <groupId>junit</groupId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <artifactId>mockito-all</artifactId>
+      <groupId>org.mockito</groupId>
       <scope>test</scope>
     </dependency>
   </dependencies>
