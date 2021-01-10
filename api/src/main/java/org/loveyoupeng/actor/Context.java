@@ -1,5 +1,6 @@
 package org.loveyoupeng.actor;
 
 public interface Context {
-  long now();
+
+  void send(Identifier target, @SuppressWarnings("rawtypes") Payload message);
 }
