@@ -1,6 +1,5 @@
 package org.loveyoupeng.actor;
 
-public interface Actor extends Identifiable, Cloneable{
+public interface Actor extends AutoCloseable, Identifiable {
   void receive(final Event event, final Context context);
-  void start(final Context context);
 }

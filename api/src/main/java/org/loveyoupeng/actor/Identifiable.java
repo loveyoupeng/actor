@@ -1,5 +1,5 @@
 package org.loveyoupeng.actor;
 
-public  interface Identifiable {
-  Identity identity();
+public interface Identifiable {
+  Identifier id();
 }
