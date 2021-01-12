@@ -1,6 +1,7 @@
 package org.loveyoupeng.actor;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 
 import java.util.concurrent.CountDownLatch;
@@ -50,4 +51,59 @@ public class ActorTest {
     latch.await();
     assertEquals(4, counter.get());
   }
+
+  interface MessageHandler extends Dispatcher<MessageHandler> {
+    void on(final StringMessage msg);
+    void on(final IntMessage msg);
+  }
+
+  private static abstract class Message<M extends Payload<MessageHandler, M>> implements Payload<MessageHandler, M> {
+
+  }
+
+  private static final class StringMessage extends Message<StringMessage> {
+
+    @Override
+    public void dispatch(final MessageHandler dispatcher) {
+      dispatcher.on(this);
+    }
+  }
+
+  private static final class IntMessage extends Message<IntMessage> {
+
+    @Override
+    public void dispatch(final MessageHandler dispatcher) {
+      dispatcher.on(this);
+    }
+  }
+
+  @Test
+  public void test_typed_actor() {
+    final Context testContext = mock(Context.class);
+    final Identifier id = new TestIdentifier();
+    final StringMessage stringMessage = new StringMessage();
+    final IntMessage intMessage = new IntMessage();
+    final TypedActor actor = new TypedActor() {
+      @Override
+      public Identifier id() {
+        return id;
+      }
+
+      public void on(final StringMessage message, final Context context) {
+        assertSame(stringMessage, message);
+        assertSame(testContext, context);
+      }
+
+      public void on(final IntMessage message, final Context context) {
+        assertSame(intMessage, message);
+        assertSame(testContext, context);
+      }
+    };
+    final Domain domain = mock(Domain.class);
+    domain.addActor(actor);
+    domain.send(id, stringMessage);
+    domain.send(id, intMessage);
+  }
+
+
 }
